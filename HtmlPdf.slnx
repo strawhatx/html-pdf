@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/core/core.csproj" />
+    <Project Path="src/data/data.csproj" />
+    <Project Path="src/queue/queue.csproj" />
+    <Project Path="src/renderer/renderer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/api.Tests/api.Tests.csproj" />
+    <Project Path="tests/fixtureSuite.Tests/fixtureSuite.Tests.csproj" />
+    <Project Path="tests/renderer.Tests/renderer.Tests.csproj" />
+  </Folder>
+  <Project Path="src/api/api.csproj" />
+</Solution>
