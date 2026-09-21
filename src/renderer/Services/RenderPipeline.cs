@@ -32,7 +32,7 @@ public sealed class RenderPipeline(
             await page.SetContentAsync(job.Html ?? "<html><body></body></html>");
         }
 
-        var scriptPath = Path.Combine(AppContext.BaseDirectory, "Assets", "pagedjs", "pagedjs.bundle.v0.1.0.js");
+        var scriptPath = Path.Combine(AppContext.BaseDirectory, "Assets", "pagedjs", "paged.v0.1.0.js");
         if (File.Exists(scriptPath))
         {
             await page.AddScriptTagAsync(new() { Path = scriptPath });

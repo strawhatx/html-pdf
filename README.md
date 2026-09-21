@@ -140,6 +140,33 @@ To use port `5080` instead:
 dotnet run --project src/api/api.csproj --urls http://localhost:5080
 ```
 
+## Break-Token Diagnostics
+
+`BreakTokenDiagnostics` is a manual console harness for running one HTML fixture through Chromium and inspecting the resulting PDF. It intentionally has no database, Redis, or hosted worker dependencies.
+
+Build it and install its Playwright browser once:
+
+```bash
+dotnet build src/BreakTokenDiagnostics/BreakTokenDiagnostics.csproj
+npx --yes playwright@1.62.0 install chromium
+```
+
+Run the included smoke fixture:
+
+```bash
+mkdir -p results
+dotnet run --project src/BreakTokenDiagnostics -- src/BreakTokenDiagnostics/fixtures/hello-world.html --out results/hello-world.pdf
+```
+
+Run a directory of benchmark fixtures after adding the HTML files:
+
+```bash
+mkdir -p results
+for f in fixtures/*.html; do
+	dotnet run --project src/BreakTokenDiagnostics -- "$f" --out "results/$(basename "$f" .html).pdf"
+done
+```
+
 ## Stop Local Services
 
 Stop the .NET processes with `Ctrl+C`, then stop the containers:

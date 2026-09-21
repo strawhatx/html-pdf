@@ -4,6 +4,7 @@
     <Project Path="src/data/data.csproj" />
     <Project Path="src/queue/queue.csproj" />
     <Project Path="src/renderer/renderer.csproj" />
+    <Project Path="src/BreakTokenDiagnostics/BreakTokenDiagnostics.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/api.Tests/api.Tests.csproj" />

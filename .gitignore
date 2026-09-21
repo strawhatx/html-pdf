@@ -21,6 +21,7 @@ coverage/
 ## Generated local tooling files
 .nuget/
 artifacts/
+results/
 
 ## OS files
 .DS_Store
