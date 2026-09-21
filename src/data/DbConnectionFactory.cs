@@ -24,7 +24,7 @@ public sealed class DbConnectionFactory : IDbConnectionFactory
         _writerConnectionString = BuildConnectionString(writer ?? reader, port, database, username, password);
     }
 
-    internal static string BuildConnectionString(string? host = null, string? port = null, string? database = null, string? username = null, string? password = null)
+    public static string BuildConnectionString(string? host = null, string? port = null, string? database = null, string? username = null, string? password = null)
     {
         var resolvedHost = FirstNonEmpty(host,
             Environment.GetEnvironmentVariable("HTMLPDF_DB_HOST"),

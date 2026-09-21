@@ -24,6 +24,21 @@ public sealed class BrowserPool : IAsyncDisposable
         _concurrencyLimiter = new SemaphoreSlim(max, max);
     }
 
+    /// <summary>
+    /// Initializes the browser pool by launching a Chromium instance. This method should be called before acquiring any browser contexts. It ensures that the browser is ready for use and handles any necessary setup.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
+    {
+        await GetOrCreateBrowserAsync(cancellationToken);
+    }
+
+    /// <summary>
+    ///  Acquires a new browser context from the pool. This method waits for an available slot in the concurrency limiter, creates a new browser context, and returns it wrapped in a <see cref="RentedContext"/>. The caller is responsible for disposing the rented context to release the slot back to the pool.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<RentedContext> AcquireContextAsync(CancellationToken cancellationToken = default)
     {
         await _concurrencyLimiter.WaitAsync(cancellationToken);
@@ -46,6 +61,11 @@ public sealed class BrowserPool : IAsyncDisposable
         }
     }
 
+/// <summary>
+/// Gets or creates the Chromium browser instance. If the browser is already running and connected, it returns the existing instance. If not, it launches a new Chromium process with the specified options. This method ensures that only one browser instance is created and handles concurrency using a semaphore lock.
+/// </summary>
+/// <param name="cancellationToken"></param>
+/// <returns></returns>
     private async Task<IBrowser> GetOrCreateBrowserAsync(CancellationToken cancellationToken)
     {
         if (_browser is { IsConnected: true })
@@ -67,6 +87,7 @@ public sealed class BrowserPool : IAsyncDisposable
                 await _browser.DisposeAsync();
             }
 
+            // Launch a new Chromium instance with the specified options
             _playwright ??= await Playwright.CreateAsync();
             _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
@@ -87,6 +108,10 @@ public sealed class BrowserPool : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes the browser pool and releases all resources. This method closes the Chromium browser instance and disposes of the Playwright instance. It should be called when the browser pool is no longer needed to free up system resources.
+    /// </summary>
+    /// <returns></returns>
     public async ValueTask DisposeAsync()
     {
         if (_browser is not null)

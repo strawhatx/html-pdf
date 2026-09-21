@@ -28,7 +28,7 @@ public sealed class WaitOptions
 {
     public string Type { get; set; } = "timeout";
     public string? Value { get; set; }
-    public int Ms { get; set; } = 0;
+    public int Ms { get; set; }
 }
 
 public sealed record JobRecord(string Id, string Status, long PayloadSize, DateTimeOffset CreatedAt);

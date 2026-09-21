@@ -3,6 +3,9 @@ using System.Net.Sockets;
 
 namespace api;
 
+/// <summary>
+/// Exception thrown when a URL is blocked due to SSRF protection.
+/// </summary>
 public sealed class SsrfBlockedException : Exception
 {
     public SsrfBlockedException(string message) : base(message)
@@ -18,6 +21,10 @@ public sealed class SsrfBlockedException : Exception
 /// </summary>
 public static class SsrfGuard
 {
+    /// <summary>
+    /// Blocks navigation to internal/cloud-metadata network destinations when a caller supplies a
+    /// `url` instead of raw HTML. Checked once before a job is queued and again
+    /// </summary>
     private static readonly (IPAddress Network, int PrefixLength)[] BlockedIPv4Ranges =
     [
         (IPAddress.Parse("0.0.0.0"), 8),
@@ -33,6 +40,10 @@ public static class SsrfGuard
         (IPAddress.Parse("240.0.0.0"), 4),
     ];
 
+/// <summary>
+/// Blocks navigation to internal/cloud-metadata network destinations when a caller supplies a
+/// `url` instead of raw HTML. Checked once before a job is queued and again,
+/// </summary>
     private static readonly (IPAddress Network, int PrefixLength)[] BlockedIPv6Ranges =
     [
         (IPAddress.Parse("::"), 128),
@@ -45,6 +56,12 @@ public static class SsrfGuard
 
     public static bool IsSchemeAllowed(Uri uri) => uri.Scheme is "http" or "https";
 
+    /// <summary>
+    /// Determines if the given URL is allowed based on its scheme and resolved IP addresses.
+    /// </summary>
+    /// <param name="uri"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public static async Task<bool> IsUrlAllowedAsync(Uri uri, CancellationToken cancellationToken = default)
     {
         if (!IsSchemeAllowed(uri))
@@ -65,6 +82,11 @@ public static class SsrfGuard
         return addresses.Length > 0 && addresses.All(IsPublicAddress);
     }
 
+    /// <summary>
+    /// Determines if the given IP address is considered public (not in any blocked ranges).
+    /// </summary>
+    /// <param name="address"></param>
+    /// <returns></returns>
     public static bool IsPublicAddress(IPAddress address)
     {
         if (address.IsIPv4MappedToIPv6)
@@ -79,6 +101,13 @@ public static class SsrfGuard
         return !ranges.Any(range => IsInRange(address, range.Network, range.PrefixLength));
     }
 
+    /// <summary>
+    /// Determines if the given IP address is within the specified network range.
+    /// </summary>
+    /// <param name="address"></param>
+    /// <param name="network"></param>
+    /// <param name="prefixLength"></param>
+    /// <returns></returns>
     private static bool IsInRange(IPAddress address, IPAddress network, int prefixLength)
     {
         var addressBytes = address.GetAddressBytes();

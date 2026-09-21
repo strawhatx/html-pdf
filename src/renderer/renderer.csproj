@@ -1,11 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup><ItemGroup>
-    <PackageReference Include="Microsoft.Playwright" Version="1.55.0" />
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-renderer-ee0373ac-6425-4c92-ba10-ce4263ff62c6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.62.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\core\core.csproj" />
+    <ProjectReference Include="..\data\data.csproj" />
+    <ProjectReference Include="..\queue\queue.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Assets\**\*.js" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
