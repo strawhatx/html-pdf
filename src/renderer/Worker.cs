@@ -10,7 +10,6 @@ namespace renderer;
 public sealed class Worker(
     ILogger<Worker> logger,
     IJobQueue jobQueue,
-    RenderPipeline renderPipeline,
     IOutputStorage outputStorage,
     IServiceScopeFactory scopeFactory,
     BrowserPool browserPool) : BackgroundService
@@ -30,6 +29,7 @@ public sealed class Worker(
 
             await using var scope = scopeFactory.CreateAsyncScope();
             var jobs = scope.ServiceProvider.GetRequiredService<IJobRepository>();
+            var renderPipeline = scope.ServiceProvider.GetRequiredService<RenderPipeline>();
 
             try
             {

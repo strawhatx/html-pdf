@@ -28,7 +28,8 @@ builder.Services.AddSingleton<BrowserPool>();
 builder.Services.AddSingleton<SsrfValidator>();
 builder.Services.AddSingleton<IOutputStorage, OutputStorage>();
 builder.Services.AddScoped<RenderPipeline>();
-builder.Services.AddSingleton<IJobQueue, RedisJobQueue>();
+builder.Services.AddSingleton<RedisJobQueue>();
+builder.Services.AddSingleton<IJobQueue>(services => services.GetRequiredService<RedisJobQueue>());
 builder.Services.AddHostedService<RedisVisibilitySweepService>();
 builder.Services.AddHostedService<Worker>();
 
