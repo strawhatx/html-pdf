@@ -1,14 +1,23 @@
 using api;
 using core;
+using core.Contracts;
 using core.Jobs;
 using data;
 using data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using queue;
 
 var builder = WebApplication.CreateBuilder(args);
 var dbConnection = DbConnectionOptions.FromConfiguration(builder.Configuration);
 
 builder.Services.AddOpenApi();
+var queueOptions = builder.Configuration.GetSection("Redis").Get<QueueOptions>() ?? new QueueOptions();
+queueOptions.ConnectionString = builder.Configuration.GetConnectionString("Redis")
+    ?? Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
+    ?? queueOptions.ConnectionString;
+builder.Services.AddSingleton(queueOptions);
+builder.Services.AddSingleton<RedisConnectionFactory>();
+builder.Services.AddSingleton<IJobQueue, RedisJobQueue>();
 builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(
     DbConnectionFactory.BuildConnectionString(
         dbConnection.Writer,

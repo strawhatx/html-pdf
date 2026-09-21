@@ -8,7 +8,13 @@ using renderer.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 var dbConnection = DbConnectionOptions.FromConfiguration(builder.Configuration);
+var queueOptions = builder.Configuration.GetSection("Redis").Get<QueueOptions>() ?? new QueueOptions();
+queueOptions.ConnectionString = builder.Configuration.GetConnectionString("Redis")
+	?? Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
+	?? queueOptions.ConnectionString;
 
+builder.Services.AddSingleton(queueOptions);
+builder.Services.AddSingleton<RedisConnectionFactory>();
 builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(
 	DbConnectionFactory.BuildConnectionString(
 		dbConnection.Writer,
@@ -22,7 +28,8 @@ builder.Services.AddSingleton<BrowserPool>();
 builder.Services.AddSingleton<SsrfValidator>();
 builder.Services.AddSingleton<IOutputStorage, OutputStorage>();
 builder.Services.AddScoped<RenderPipeline>();
-builder.Services.AddSingleton<IJobQueue, InMemoryJobQueue>();
+builder.Services.AddSingleton<IJobQueue, RedisJobQueue>();
+builder.Services.AddHostedService<RedisVisibilitySweepService>();
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
