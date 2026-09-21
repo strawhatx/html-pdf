@@ -3,8 +3,17 @@ using core;
 using data;
 
 var builder = WebApplication.CreateBuilder(args);
+var dbConnection = DbConnectionOptions.FromConfiguration(builder.Configuration);
 
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
+    new DbConnectionFactory(
+        dbConnection.Reader,
+        dbConnection.Writer,
+        dbConnection.Port,
+        dbConnection.Database,
+        dbConnection.Username,
+        dbConnection.Password));
 builder.Services.AddSingleton<HtmlPdfService>();
 builder.Services.AddSingleton<ApiKeyAuthentication>();
 builder.Services.AddSingleton<JobStore>();
@@ -13,7 +22,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi("/openapi/{documentName}.json");
 }
 
 app.UseHttpsRedirection();
