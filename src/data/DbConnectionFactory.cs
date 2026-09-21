@@ -1,29 +1,9 @@
-using System.Data;
 using Npgsql;
 
 namespace data;
 
-public interface IDbConnectionFactory
+public static class DbConnectionFactory
 {
-    IDbConnection CreateReadConnection();
-    IDbConnection CreateWriteConnection();
-}
-
-public sealed class DbConnectionFactory : IDbConnectionFactory
-{
-    private readonly string _readerConnectionString;
-    private readonly string _writerConnectionString;
-
-    public DbConnectionFactory() : this(null)
-    {
-    }
-
-    public DbConnectionFactory(string? reader = null, string? writer = null, string? port = null, string? database = null, string? username = null, string? password = null)
-    {
-        _readerConnectionString = BuildConnectionString(reader, port, database, username, password);
-        _writerConnectionString = BuildConnectionString(writer ?? reader, port, database, username, password);
-    }
-
     public static string BuildConnectionString(string? host = null, string? port = null, string? database = null, string? username = null, string? password = null)
     {
         var resolvedHost = FirstNonEmpty(host,
@@ -110,37 +90,4 @@ public sealed class DbConnectionFactory : IDbConnectionFactory
         return null;
     }
 
-    public IDbConnection CreateReadConnection()
-    {
-        return new NpgsqlConnection(_readerConnectionString);
-    }
-
-    public IDbConnection CreateWriteConnection()
-    {
-        return new NpgsqlConnection(_writerConnectionString);
-    }
-}
-
-public abstract class RepositoryBase
-{
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    protected RepositoryBase(IDbConnectionFactory connectionFactory)
-    {
-        _connectionFactory = connectionFactory;
-    }
-
-    protected IDbConnection OpenReadConnection()
-    {
-        var connection = _connectionFactory.CreateReadConnection();
-        connection.Open();
-        return connection;
-    }
-
-    protected IDbConnection OpenWriteConnection()
-    {
-        var connection = _connectionFactory.CreateWriteConnection();
-        connection.Open();
-        return connection;
-    }
 }

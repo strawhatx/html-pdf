@@ -13,7 +13,11 @@ public sealed class RenderPipeline(
     {
         if (!string.IsNullOrWhiteSpace(job.Url))
         {
-            await ssrfValidator.ValidateAsync(job.Url, cancellationToken);
+            var check = await ssrfValidator.ValidateAsync(job.Url, cancellationToken);
+            if (!check.IsAllowed)
+            {
+                throw new SsrfViolationException(check.Reason ?? "URL is not allowed.");
+            }
         }
 
         await using var rentedContext = await browserPool.AcquireContextAsync(cancellationToken);

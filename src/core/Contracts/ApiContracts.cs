@@ -34,8 +34,3 @@ public sealed class WaitOptions
 public sealed record JobRecord(string Id, string Status, long PayloadSize, DateTimeOffset CreatedAt);
 
 public sealed record UsageRecord(string Key, long JobCount, long BytesProcessed);
-
-public interface IHtmlPdfRenderer
-{
-    Task<byte[]> RenderAsync(ConvertRequest request, CancellationToken cancellationToken = default);
-}

@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <None Include="../../src/BreakTokenDiagnostics/fixtures/*.html" Link="fixtures/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="fixtures/*.html" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../src/renderer/Assets/pagedjs/paged.v0.1.0.js" Link="Assets/pagedjs/paged.v0.1.0.js" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
