@@ -2,7 +2,7 @@
 
 if (args.Length < 1)
 {
-	Console.WriteLine("Usage: dotnet run -- <input.html> [--out output.pdf]");
+	Console.WriteLine("Usage: dotnet run -- <input.html> [--out output.pdf] [--no-pagedjs]");
 	return 1;
 }
 
@@ -11,6 +11,7 @@ var outIndex = Array.IndexOf(args, "--out");
 var outputPath = outIndex >= 0 && outIndex + 1 < args.Length
 	? args[outIndex + 1]
 	: Path.ChangeExtension(Path.GetFileName(inputPath), ".pdf");
+var noPagedJs = args.Contains("--no-pagedjs");
 
 if (!File.Exists(inputPath))
 {
@@ -21,7 +22,7 @@ if (!File.Exists(inputPath))
 var html = await File.ReadAllTextAsync(inputPath);
 var bundlePath = Path.Combine(AppContext.BaseDirectory, "Assets", "pagedjs", "paged.v0.1.0.js");
 
-if (!File.Exists(bundlePath))
+if (!noPagedJs && !File.Exists(bundlePath))
 {
 	Console.Error.WriteLine($"PagedJS asset not found: {bundlePath}");
 	return 1;
@@ -32,20 +33,30 @@ Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath))!);
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
 var page = await browser.NewPageAsync();
+page.Console += (_, msg) => Console.WriteLine($"[console.{msg.Type}] {msg.Text}");
+page.PageError += (_, err) => Console.WriteLine($"[pageerror] {err}");
 
 var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
 await page.SetContentAsync(html);
-await page.AddScriptTagAsync(new() { Path = bundlePath });
 
-try
+if (noPagedJs)
 {
-	await page.EvaluateAsync("() => new Paged.Previewer().preview()");
+	Console.WriteLine("Skipping paged.js - rendering with raw Chromium print pagination.");
 }
-catch (TimeoutException)
+else
 {
-	Console.Error.WriteLine("Pagination did not complete within 30s - check the fixture for infinite-loop conditions.");
-	return 1;
+	await page.AddScriptTagAsync(new() { Path = bundlePath });
+
+	try
+	{
+		await page.EvaluateAsync("() => new Paged.Previewer().preview()");
+	}
+	catch (TimeoutException)
+	{
+		Console.Error.WriteLine("Pagination did not complete within 30s - check the fixture for infinite-loop conditions.");
+		return 1;
+	}
 }
 
 var pdfBytes = await page.PdfAsync(new() { PrintBackground = true, Format = "A4" });

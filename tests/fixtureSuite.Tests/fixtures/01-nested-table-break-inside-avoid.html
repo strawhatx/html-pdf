@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @page { size: A4; margin: 18mm; }
+    body { font-family: sans-serif; font-size: 12px; }
+    h1 { font-size: 18px; margin: 0 0 10px; }
+    .spacer p { margin: 0 0 6px; line-height: 1.5; }
+    .card {
+      break-inside: avoid;
+      border: 2px solid #333;
+      padding: 6px;
+      margin: 0 0 8px;
+    }
+    .card table { width: 100%; border-collapse: collapse; }
+    .card th, .card td {
+      border: 1px solid #999;
+      padding: 3px 5px;
+      text-align: left;
+    }
+    .card th { background: #eee; }
+  </style>
+</head>
+<body>
+  <h1>Fixture 01: Nested Table break-inside: avoid</h1>
+  <div class="spacer">
+    <p>Spacer paragraph 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 3. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 4. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 5. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 6. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 7. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 8. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 9. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 10. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 11. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 12. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 13. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 14. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 15. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 16. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 17. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Spacer paragraph 18. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+  <div class="card" id="card-target">
+    <strong>CARDSTART</strong>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Row 1</td><td>Value 1</td></tr>
+      <tr><td>Row 2</td><td>Value 2</td></tr>
+      <tr><td>Row 3</td><td>Value 3</td></tr>
+      <tr><td>Row 4</td><td>Value 4</td></tr>
+      <tr><td>Row 5</td><td>Value 5</td></tr>
+      <tr><td>Row 6</td><td>Value 6</td></tr>
+      <tr><td>Row 7</td><td>Value 7</td></tr>
+      <tr><td>Row 8</td><td>Value 8</td></tr>
+    </table>
+    <strong>CARDEND</strong>
+  </div>
+</body>
+</html>
